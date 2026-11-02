@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="loadRing1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="loadRing2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <filter id="loadGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <style>
+      @keyframes spinClockwise {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes spinCounter {
+        from { transform: rotate(360deg); }
+        to { transform: rotate(0deg); }
+      }
+      @keyframes pulseSpark {
+        0%, 100% { transform: scale(0.92); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+      }
+      .ring-cw {
+        transform-origin: 100px 100px;
+        animation: spinClockwise 4s linear infinite;
+      }
+      .ring-ccw {
+        transform-origin: 100px 100px;
+        animation: spinCounter 3s linear infinite;
+      }
+      .spark-pulse {
+        transform-origin: 100px 100px;
+        animation: pulseSpark 2s ease-in-out infinite;
+      }
+    </style>
+  </defs>
+
+  <!-- Ambient Backdrop Glow -->
+  <circle cx="100" cy="100" r="60" fill="#6366f1" fill-opacity="0.12" filter="url(#loadGlow)" />
+
+  <!-- Outer Dashed Ring -->
+  <circle class="ring-cw" cx="100" cy="100" r="75" stroke="#334155" stroke-width="2" stroke-dasharray="10 8" />
+
+  <!-- Middle Glowing Orbital Track 1 -->
+  <circle class="ring-cw" cx="100" cy="100" r="58" stroke="url(#loadRing1)" stroke-width="3" stroke-linecap="round" stroke-dasharray="80 200" filter="url(#loadGlow)" />
+  <circle class="ring-cw" cx="100" cy="42" r="4" fill="#38bdf8" filter="url(#loadGlow)" />
+
+  <!-- Inner Counter-Rotating Orbital Track 2 -->
+  <circle class="ring-ccw" cx="100" cy="100" r="42" stroke="url(#loadRing2)" stroke-width="3" stroke-linecap="round" stroke-dasharray="60 160" filter="url(#loadGlow)" />
+  <circle class="ring-ccw" cx="100" cy="58" r="3.5" fill="#c084fc" filter="url(#loadGlow)" />
+
+  <!-- Central Glowing AI Core -->
+  <g class="spark-pulse" filter="url(#loadGlow)">
+    <circle cx="100" cy="100" r="22" fill="#0f172a" stroke="#6366f1" stroke-width="2" />
+    <circle cx="100" cy="100" r="14" fill="#06b6d4" fill-opacity="0.3" />
+    <!-- AI Sparkle Core Polygon -->
+    <path d="M100 86 Q100 100 86 100 Q100 100 100 114 Q100 100 114 100 Q100 100 100 86 Z" fill="#38bdf8" />
+  </g>
+</svg>

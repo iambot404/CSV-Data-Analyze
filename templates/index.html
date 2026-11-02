@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SynapseCSV - AI Data Analyzer &amp; Visualizer</title>
+  <meta name="description" content="Instant serverless CSV profiling, Matplotlib visualizations, and Gemini AI executive analysis with natural language Q&A.">
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Navbar -->
+    <header class="navbar">
+      <a href="/" class="brand">
+        <img src="/static/img/logo.svg" alt="SynapseCSV Logo">
+      </a>
+
+      <div class="nav-actions">
+        <button id="btnOpenHistory" class="btn btn-outline" title="View past analyses">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          History
+        </button>
+
+        <div id="authContainer">
+          <!-- Populated by JS: either Sign In button or User Pill -->
+          <button id="btnOpenAuth" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Sign In / Register
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero & Upload Section -->
+    <section id="uploadSection" class="hero-section">
+      <div class="hero-badge">
+        <img src="/static/img/ai-sparkle.svg" alt="AI Sparkle">
+        Powered by Gemini AI &amp; Serverless Python
+      </div>
+      <h1 class="hero-title">Turn Raw CSVs into <span>Actionable Intelligence</span></h1>
+      <p class="hero-subtitle">
+        Upload your tabular data to generate automated distributions, correlation heatmaps, statistical profiling, and deep executive insights in seconds.
+      </p>
+
+      <!-- Drag & Drop Upload Zone -->
+      <div id="dropZone" class="upload-card">
+        <input type="file" id="csvFileInput" accept=".csv,.tsv,.txt" style="display: none;">
+        <img src="/static/img/upload-art.svg" alt="Upload Vector Artwork" class="upload-art">
+        <h3 class="upload-title">Drop your CSV file here or browse</h3>
+        <p class="upload-hint">In-memory processing &bull; Zero persistent storage required</p>
+        <div class="upload-specs">
+          <span>Max File Size: 10 MB</span>
+          <span>Formats: .csv, .tsv, .txt</span>
+          <span>Instant Gemini Analysis</span>
+        </div>
+      </div>
+
+      <!-- Quick Sample Datasets -->
+      <div class="samples-bar">
+        <span class="samples-label">Or test with instant sample:</span>
+        <button class="sample-chip" data-sample="ecommerce">
+          🛒 E-Commerce Global Sales
+        </button>
+        <button class="sample-chip" data-sample="churn">
+          👥 Customer Retention &amp; Churn
+        </button>
+        <button class="sample-chip" data-sample="marketing">
+          📈 Digital Marketing ROI
+        </button>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <section id="loadingSection" class="loading-overlay">
+      <img src="/static/img/loading-art.svg" alt="Processing Vector Animation" class="loading-art">
+      <h3 class="loading-text">Analyzing Dataset...</h3>
+      <p id="loadingSubtext" class="loading-subtext">Computing statistical distributions &amp; Matplotlib visuals...</p>
+    </section>
+
+    <!-- Dashboard Container (Loaded after CSV parsed) -->
+    <main id="dashboardSection" class="dashboard-container">
+      <div class="dashboard-header">
+        <div class="dashboard-title-box">
+          <h2>
+            <img src="/static/img/ai-sparkle.svg" width="24" height="24" alt="AI">
+            <span id="dashFilename">dataset.csv</span>
+          </h2>
+          <span id="dashFileMeta" class="dashboard-filename">Profiled in memory</span>
+        </div>
+        <div class="dashboard-actions">
+          <button id="btnNewUpload" class="btn btn-outline">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Upload Another
+          </button>
+          <button id="btnExportReport" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Rows</div>
+          <div id="kpiRows" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Columns</div>
+          <div id="kpiCols" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Memory Footprint</div>
+          <div id="kpiMemory" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Missing Values</div>
+          <div id="kpiMissing" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Duplicate Rows</div>
+          <div id="kpiDuplicates" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Data Health Score</div>
+          <div id="kpiHealth" class="kpi-value">-</div>
+          <span id="kpiHealthBadge" class="kpi-health-badge health-good">Ready</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="tabInsights">
+          ✨ Executive AI Insights
+        </button>
+        <button class="tab-btn" data-tab="tabCharts">
+          📊 Visualizations (<span id="chartCount">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="tabColumns">
+          🔍 Column Profiler (<span id="columnCount">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="tabPreview">
+          📑 Data Preview (25 rows)
+        </button>
+        <button class="tab-btn" data-tab="tabChat">
+          💬 Ask AI ("Ask Your CSV")
+        </button>
+      </nav>
+
+      <!-- TAB 1: AI Insights -->
+      <section id="tabInsights" class="tab-content active">
+        <div class="insights-container">
+          <div class="executive-summary-card">
+            <div class="card-header-badge">
+              <img src="/static/img/ai-sparkle.svg" alt="Sparkle">
+              Gemini AI Executive Summary &bull; <span id="modelTag">gemini-flash-lite</span>
+            </div>
+            <p id="aiExecutiveSummary" class="summary-text">Generating insights...</p>
+          </div>
+
+          <div class="insights-grid">
+            <div class="insight-box">
+              <h3>🔍 Key Patterns &amp; Correlations</h3>
+              <ul id="aiKeyPatterns" class="insight-list"></ul>
+            </div>
+
+            <div class="insight-box">
+              <h3>⚠️ Anomalies &amp; Data Quality Risks</h3>
+              <ul id="aiAnomalies" class="insight-list anomaly-list"></ul>
+            </div>
+
+            <div class="insight-box">
+              <h3>🎯 Strategic Action Recommendations</h3>
+              <ul id="aiRecommendations" class="insight-list recommend-list"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Visualizations -->
+      <section id="tabCharts" class="tab-content">
+        <div id="chartsContainer" class="charts-grid">
+          <!-- Rendered Matplotlib Base64 charts dynamically inserted here -->
+        </div>
+      </section>
+
+      <!-- TAB 3: Column Inspector -->
+      <section id="tabColumns" class="tab-content">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Column Name</th>
+                <th>Inferred Type</th>
+                <th>Missing Values</th>
+                <th>Unique Values</th>
+                <th>Statistical Highlights / Mode</th>
+                <th>Sample Preview</th>
+              </tr>
+            </thead>
+            <tbody id="columnsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: Data Preview -->
+      <section id="tabPreview" class="tab-content">
+        <div class="table-responsive">
+          <table class="data-table" id="previewDataTable">
+            <thead id="previewTableHead"></thead>
+            <tbody id="previewTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 5: Ask AI Chat -->
+      <section id="tabChat" class="tab-content">
+        <div class="chat-container">
+          <aside class="chat-sidebar">
+            <h4>💡 Suggested Prompts</h4>
+            <div id="suggestedPromptsList" class="suggested-prompts">
+              <!-- Dynamically populated from Gemini's suggested questions -->
+            </div>
+          </aside>
+
+          <main class="chat-main">
+            <div id="chatMessages" class="chat-messages">
+              <div class="chat-bubble bubble-ai">
+                👋 Hello! I have reviewed your dataset profile. Ask me any question in natural language about trends, maximums, distributions, or cohort comparisons.
+              </div>
+            </div>
+
+            <form id="chatForm" class="chat-input-row">
+              <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question about this data (e.g. Which category is highest?)..." autocomplete="off">
+              <button type="submit" class="btn btn-primary" id="btnSendChat">Ask AI</button>
+            </form>
+          </main>
+        </div>
+      </section>
+    </main>
+
+    <!-- History Modal / Drawer -->
+    <div id="historyModal" class="modal-backdrop">
+      <div class="modal-box" style="max-width: 600px;">
+        <button class="modal-close" id="btnCloseHistory">&times;</button>
+        <h3 style="margin-bottom: 6px;">Analysis History</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px;">
+          Saved dataset profiles stored in Supabase
+        </p>
+        <div id="historyList" style="max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+          <!-- Loaded from /api/history -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth Modal (Sign In / Register) -->
+    <div id="authModal" class="modal-backdrop">
+      <div class="modal-box">
+        <button class="modal-close" id="btnCloseAuth">&times;</button>
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tabSignIn">Sign In</div>
+          <div class="auth-tab" id="tabSignUp">Create Account</div>
+        </div>
+
+        <div id="authError" class="auth-error"></div>
+
+        <form id="authForm">
+          <div class="form-group" id="groupFullName" style="display: none;">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="authFullName" class="form-control" placeholder="Alex Morgan">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="authEmail" class="form-control" placeholder="name@company.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;" id="btnAuthSubmit">
+            Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript Application Logic -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

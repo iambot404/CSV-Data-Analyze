@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 200" fill="none">
+  <defs>
+    <linearGradient id="emptyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="cubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <filter id="emptyGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="140" cy="100" r="70" fill="#6366f1" fill-opacity="0.08" filter="url(#emptyGlow)" />
+
+  <!-- Base Grid Platform -->
+  <g opacity="0.6">
+    <ellipse cx="140" cy="155" rx="80" ry="20" fill="#030712" />
+    <path d="M70 155 L140 175 L210 155 L140 135 Z" fill="none" stroke="#334155" stroke-dasharray="4 4" stroke-width="1.2" />
+    <line x1="140" y1="135" x2="140" y2="175" stroke="#334155" stroke-dasharray="3 3" />
+    <line x1="105" y1="145" x2="175" y2="165" stroke="#334155" stroke-dasharray="3 3" />
+  </g>
+
+  <!-- Floating Holographic Data Cube -->
+  <g transform="translate(100, 48)" filter="url(#emptyGlow)">
+    <!-- Top Face -->
+    <polygon points="40,0 80,18 40,36 0,18" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+    <!-- Left Face -->
+    <polygon points="0,18 40,36 40,80 0,62" fill="url(#cubeGrad)" stroke="#6366f1" stroke-width="1.5" />
+    <!-- Right Face -->
+    <polygon points="40,36 80,18 80,62 40,80" fill="#0f172a" stroke="#a855f7" stroke-width="1.5" />
+
+    <!-- Internal Glowing AI Matrix Node -->
+    <circle cx="40" cy="36" r="6" fill="#06b6d4" />
+    <circle cx="40" cy="36" r="10" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3 2" />
+    
+    <!-- Data Stream Glyphs on Faces -->
+    <line x1="10" y1="36" x2="30" y2="46" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="10" y1="46" x2="25" y2="53" stroke="#64748b" stroke-width="1.2" stroke-linecap="round" />
+    <line x1="50" y1="46" x2="70" y2="36" stroke="#c084fc" stroke-width="1.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Floating Orbiting Spheres -->
+  <circle cx="65" cy="85" r="4.5" fill="#38bdf8" filter="url(#emptyGlow)" />
+  <circle cx="215" cy="70" r="5" fill="#a855f7" filter="url(#emptyGlow)" />
+  <circle cx="195" cy="125" r="3" fill="#06b6d4" />
+  <circle cx="85" cy="130" r="3.5" fill="#6366f1" />
+
+  <!-- Dotted Connection Lines -->
+  <line x1="65" y1="85" x2="100" y2="66" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3 3" opacity="0.5" />
+  <line x1="180" y1="66" x2="215" y2="70" stroke="#a855f7" stroke-width="1" stroke-dasharray="3 3" opacity="0.5" />
+</svg>
